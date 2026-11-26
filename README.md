@@ -38,7 +38,7 @@ In the GitHub repository, add these Actions secrets under **Settings → Secrets
 
 ## GitHub repository and downloads
 
-The intended public repository name is `Izzo047/Cpp-Beginner-Guide`. After creating the repository and pushing the `main` branch, push a version tag such as `v1.0.0` to trigger the release workflow. The release includes a Windows ZIP with `Fieldnotes.exe` and its course files, plus a signed Android APK and SHA-256 checksums. The Android release job requires the signing secrets above; the Windows release can be published independently.
+The public source repository is [`Izzo047/Cpp-Beginner-Guide`](https://github.com/Izzo047/Cpp-Beginner-Guide). Push a version tag such as `v1.0.0` to trigger the release workflow. The release includes a Windows ZIP with `Fieldnotes.exe` and its course files, plus a signed Android APK and SHA-256 checksums. The Android release job requires the signing secrets above; the Windows release can be published independently.
 
 The Windows app needs Microsoft Edge and .NET Framework 4.x. The executable serves the course folder locally, so lesson edits appear after refreshing the app; the Android APK is a snapshot and must be rebuilt to include course updates.
 
