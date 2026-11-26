@@ -32,6 +32,7 @@ jobs:
         with:
           accept-android-sdk-licenses: true
           log-accepted-android-sdk-licenses: true
+          packages: ''
       - name: Install Android SDK packages
         run: |
           sdkmanager --install "platforms;android-37.0" "build-tools;37.0.0"
