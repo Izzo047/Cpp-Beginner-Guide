@@ -23,9 +23,11 @@ Set-Location .\android
 .\gradlew.bat :app:assembleDebug
 ```
 
-The debug APK is written to `android\app\build\outputs\apk\debug\app-debug.apk`. Android Studio can also open the `android` folder and build the app. A release APK is built and signed by GitHub Actions when a `v*` tag is pushed; the source course files are copied into the APK during each build.
+The debug APK is written to `android\app\build\outputs\apk\debug\app-debug.apk`. Android Studio can also open the `android` folder and build the app. GitHub Actions builds a signed release APK and Android App Bundle (AAB) when a `v*` tag is pushed and all signing secrets are configured; the source course files are copied into both packages during each build.
 
-The debug APK is for testing, not public distribution. It uses Android's development signing key; published releases use the private upload key you configure below. The GitHub workflow explicitly accepts the Android SDK package licenses through Android's SDK setup action so it can install the build tools.
+The debug APK is for testing, not production distribution. It uses Android's development signing key; published APK/AAB releases use the private upload key you configure below. The GitHub workflow explicitly accepts the Android SDK package licenses through Android's SDK setup action so it can install the build tools.
+
+The app targets Android 17 (API 37), above Google Play's current API 36 minimum for phone apps. New Google Play apps must be uploaded as an AAB; the APK is for direct installation/testing. This app does not bundle native `.so` libraries, so it does not currently need native-library 16 KB page-size alignment work. If native dependencies are added later, re-check that requirement before publishing.
 
 Before publishing an Android release, create a private upload key and keep its keystore file backed up somewhere secure and outside this repository:
 
@@ -34,11 +36,11 @@ keytool -genkeypair -v -keystore "$HOME\fieldnotes-release-key.jks" -alias field
 [Convert]::ToBase64String([IO.File]::ReadAllBytes("$HOME\fieldnotes-release-key.jks")) | Set-Clipboard
 ```
 
-In the GitHub repository, add these Actions secrets under **Settings → Secrets and variables → Actions**: `ANDROID_KEYSTORE_BASE64` (the copied output), `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` (`fieldnotes`), and `ANDROID_KEY_PASSWORD`. Never commit the keystore or put its passwords in workflow files. Losing the private key prevents signing updates that Android accepts over an existing installation.
+In the GitHub repository, add these Actions secrets under **Settings → Secrets and variables → Actions**: `ANDROID_KEYSTORE_BASE64` (the copied output), `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` (`fieldnotes`), and `ANDROID_KEY_PASSWORD`. Never commit the keystore or put its passwords in workflow files. Losing the private key prevents signing updates that Android accepts over an existing installation. For Google Play, enable Play App Signing and upload the signed AAB; complete the Play Console store listing, content rating, and Data safety form separately.
 
 ## GitHub repository and downloads
 
-The public source repository is [`Izzo047/Cpp-Beginner-Guide`](https://github.com/Izzo047/Cpp-Beginner-Guide). Push a version tag such as `v1.0.0` to trigger the release workflow. Releases publish a Windows ZIP with `Fieldnotes.exe` and its course files. A signed Android APK is also published when all four signing secrets above are configured; otherwise, the Android release is explicitly skipped and the Windows release still completes.
+The public source repository is [`Izzo047/Cpp-Beginner-Guide`](https://github.com/Izzo047/Cpp-Beginner-Guide). Push a version tag such as `v1.0.0` to trigger the release workflow. Releases publish a Windows ZIP with `Fieldnotes.exe` and its course files. Signed Android APK and AAB assets are also published when all four signing secrets above are configured; otherwise, Android release assets are explicitly skipped and the Windows release still completes.
 
 The Windows app needs Microsoft Edge and .NET Framework 4.x. The executable serves the course folder locally, so lesson edits appear after refreshing the app; the Android APK is a snapshot and must be rebuilt to include course updates.
 

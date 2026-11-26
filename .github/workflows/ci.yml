@@ -40,9 +40,10 @@ jobs:
         run: |
           chmod +x android/gradlew
           cd android
-          ./gradlew --no-daemon :app:assembleDebug :app:lintDebug
+          ./gradlew --no-daemon :app:assembleDebug :app:bundleDebug :app:lintDebug
           cd ..
           python scripts/verify_android_apk.py android/app/build/outputs/apk/debug/app-debug.apk
+          python scripts/verify_android_apk.py android/app/build/outputs/bundle/debug/app-debug.aab
       - uses: actions/upload-artifact@v4
         with:
           name: fieldnotes-android-debug

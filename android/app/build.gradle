@@ -10,8 +10,8 @@ def releaseKeyAlias = System.getenv('ANDROID_KEY_ALIAS')
 def releaseKeyPassword = System.getenv('ANDROID_KEY_PASSWORD')
 def hasReleaseSigning = [releaseStorePath, releaseStorePassword, releaseKeyAlias, releaseKeyPassword]
         .every { value -> value != null && !value.isBlank() }
-def appVersionCode = (System.getenv('ANDROID_VERSION_CODE') ?: '2').toInteger()
-def appVersionName = System.getenv('ANDROID_VERSION_NAME') ?: '1.0.1'
+def appVersionCode = (System.getenv('ANDROID_VERSION_CODE') ?: '3').toInteger()
+def appVersionName = System.getenv('ANDROID_VERSION_NAME') ?: '1.0.2'
 
 tasks.register('syncCourseAssets', Sync) {
     from(courseRoot) {

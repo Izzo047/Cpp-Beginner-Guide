@@ -115,16 +115,24 @@ jobs:
           printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release-key.jks
           test -s android/app/release-key.jks
           echo "ANDROID_KEYSTORE_PATH=$GITHUB_WORKSPACE/android/app/release-key.jks" >> "$GITHUB_ENV"
-      - name: Build signed Android APK
+      - name: Build signed Android APK and App Bundle
         if: steps.android_signing.outputs.enabled == 'true'
         run: |
           chmod +x android/gradlew
           cd android
-          ./gradlew --no-daemon :app:assembleRelease
+          ./gradlew --no-daemon :app:assembleRelease :app:bundleRelease
           "$ANDROID_HOME/build-tools/37.0.0/apksigner" verify --verbose app/build/outputs/apk/release/app-release.apk
+          bundle_verification="$(jarsigner -verify app/build/outputs/bundle/release/app-release.aab 2>&1)"
+          printf '%s\n' "$bundle_verification"
+          if ! printf '%s\n' "$bundle_verification" | grep -q 'jar verified'; then
+            echo 'The Android App Bundle is not signed.'
+            exit 1
+          fi
           cd ..
           python scripts/verify_android_apk.py android/app/build/outputs/apk/release/app-release.apk
+          python scripts/verify_android_apk.py android/app/build/outputs/bundle/release/app-release.aab
           sha256sum android/app/build/outputs/apk/release/app-release.apk > android/app/build/outputs/apk/release/app-release.apk.sha256
+          sha256sum android/app/build/outputs/bundle/release/app-release.aab > android/app/build/outputs/bundle/release/app-release.aab.sha256
       - name: Upload APK to the GitHub release
         if: steps.android_signing.outputs.enabled == 'true'
         env:
@@ -133,5 +141,7 @@ jobs:
           gh release upload "$GITHUB_REF_NAME" \
             android/app/build/outputs/apk/release/app-release.apk \
             android/app/build/outputs/apk/release/app-release.apk.sha256 \
+            android/app/build/outputs/bundle/release/app-release.aab \
+            android/app/build/outputs/bundle/release/app-release.aab.sha256 \
             --repo "$GITHUB_REPOSITORY" \
             --clobber
