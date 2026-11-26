@@ -2,6 +2,8 @@
 
 These companion notes expand the 48 lessons in [`../COLLEGE_ROADMAP.md`](../COLLEGE_ROADMAP.md). Each lesson states an outcome, explains the central idea, demonstrates it, points out a common trap, and gives independent practice. Examples are teaching slices: add the required headers and a `main` function when one is not shown.
 
+Many lessons also include short text diagrams and comparisons of alternatives. Treat these as decision guides: identify the requirement first, then compare each option's guarantees, costs, and limitations. When a lesson names multiple types or techniques, trace each example and note which case it represents before choosing one for a program.
+
 ## Study order
 
 1. [Phase 1 — Programming foundations](01-foundations.md)
@@ -32,3 +34,5 @@ For each lesson, complete its practice prompt and then:
 - Revisit the idea the next day and a week later; solve a new problem without looking at the worked example.
 
 The [roadmap's publisher reading map](../COLLEGE_ROADMAP.md#recommended-publisher-reading-map) pairs beginner books and advanced references with the course stages. These notes provide a strong route through undergraduate-level foundations, not literally every feature, library, platform API, or research topic in C++. Continue with the relevant standard/library documentation and specialization electives.
+
+For another set of worked examples and topic prompts, see [Abdullah-Niaz's CPP-Complete-Course repository](https://github.com/Abdullah-Niaz/CPP-Complete-Course). It was used as a coverage cross-check for class construction and cleanup, static members, lambda captures, and standard-library pairs; the explanations and examples in these lessons are independently written and checked against modern C++ practices.
