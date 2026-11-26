@@ -89,19 +89,23 @@ jobs:
           accept-android-sdk-licenses: true
           log-accepted-android-sdk-licenses: true
           packages: ''
-      - name: Verify signing secrets and install Android SDK packages
+      - name: Prepare Android signing
+        id: android_signing
         run: |
           for name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD; do
             if [ -z "${!name}" ]; then
-              echo "::error::Missing $name. Configure the Android signing secrets described in README.md."
-              exit 1
+              echo "enabled=false" >> "$GITHUB_OUTPUT"
+              echo "::notice::Android release skipped because $name is not configured. See README.md to enable signed APK releases."
+              exit 0
             fi
           done
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
           sdkmanager --install "platforms;android-37.0" "build-tools;37.0.0"
           printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release-key.jks
           test -s android/app/release-key.jks
           echo "ANDROID_KEYSTORE_PATH=$GITHUB_WORKSPACE/android/app/release-key.jks" >> "$GITHUB_ENV"
       - name: Build signed Android APK
+        if: steps.android_signing.outputs.enabled == 'true'
         run: |
           chmod +x android/gradlew
           cd android
@@ -111,6 +115,7 @@ jobs:
           python scripts/verify_android_apk.py android/app/build/outputs/apk/release/app-release.apk
           sha256sum android/app/build/outputs/apk/release/app-release.apk > android/app/build/outputs/apk/release/app-release.apk.sha256
       - name: Upload APK to the GitHub release
+        if: steps.android_signing.outputs.enabled == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
