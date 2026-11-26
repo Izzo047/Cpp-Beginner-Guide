@@ -4,21 +4,27 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f5f6f3">
-  <meta name="description" content="A focused, interactive learning path for C++ and core computer science.">
+  <meta name="description" content="A focused, interactive learning path for C++, computer science, and PyTorch AI fundamentals.">
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; media-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'">
-  <title>Fieldnotes — C++ Learning Studio</title>
+  <title>Fieldnotes — C++ &amp; PyTorch Learning Studio</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="pytorch-lab.js" defer></script>
   <script src="app.js" defer></script>
 </head>
-<body>
+<body data-track="cpp">
   <a class="skip-link" href="#main-content">Skip to learning content</a>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar" aria-label="Course navigation">
       <a class="brand" href="#" id="home-link" aria-label="Fieldnotes home">
         <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
-        <span><strong>fieldnotes</strong><small> C++ learning studio</small></span>
+        <span><strong>fieldnotes</strong><small id="brand-subtitle"> C++ learning studio</small></span>
       </a>
+
+      <div class="track-switcher" id="track-switcher" role="group" aria-label="Course track">
+        <button class="track-btn active" type="button" data-track-btn="cpp" aria-pressed="true">C++</button>
+        <button class="track-btn" type="button" data-track-btn="pytorch" aria-pressed="false">PyTorch AI</button>
+      </div>
 
       <div class="sidebar-label">YOUR COURSE</div>
       <label class="search-box" for="lesson-search">
@@ -44,9 +50,9 @@
         <p class="loading-note">Preparing your course…</p>
       </nav>
 
-      <div class="sidebar-bottom">
+      <div class="sidebar-bottom" id="sidebar-status">
         <span class="status-dot" aria-hidden="true"></span>
-        <span>Built for steady progress</span>
+        <span id="sidebar-status-text">Built for steady progress</span>
       </div>
     </aside>
 
@@ -57,8 +63,12 @@
         <button class="icon-button mobile-menu" id="menu-toggle" type="button" aria-label="Open course navigation" aria-expanded="false">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
         </button>
-        <div class="breadcrumbs"><span>LEARNING PATH</span><span class="crumb-divider">/</span><span id="breadcrumb-current">OVERVIEW</span></div>
+        <div class="breadcrumbs"><span id="breadcrumb-root">LEARNING PATH</span><span class="crumb-divider">/</span><span id="breadcrumb-current">OVERVIEW</span></div>
         <div class="topbar-actions">
+          <div class="track-switcher track-switcher-compact" id="topbar-track-switcher" role="group" aria-label="Switch course track">
+            <button class="track-btn active" type="button" data-track-btn="cpp" aria-pressed="true">C++</button>
+            <button class="track-btn" type="button" data-track-btn="pytorch" aria-pressed="false">PyTorch</button>
+          </div>
           <button class="icon-button" id="print-button" type="button" aria-label="Print current lesson" title="Print lesson">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7z"></path><path d="M17 11h.01"></path></svg>
           </button>
@@ -85,15 +95,18 @@
       <section class="home-view" id="home-view" hidden>
         <div class="home-hero">
           <div class="hero-copy">
-            <span class="eyebrow"><span class="eyebrow-line"></span>THE COMPLETE STUDY PATH</span>
-            <h1>Learn C++.<br><em>Think like a computer scientist.</em></h1>
-            <p class="hero-description">A deliberate path from your first program to algorithms, systems, and software engineering. Learn deeply, build often, and keep what you learn.</p>
+            <span class="eyebrow"><span class="eyebrow-line"></span><span id="hero-eyebrow-text">THE COMPLETE STUDY PATH</span></span>
+            <h1 id="hero-title">Learn C++.<br><em>Think like a computer scientist.</em></h1>
+            <p class="hero-description" id="hero-description">A deliberate path from your first program to algorithms, systems, and software engineering. Learn deeply, build often, and keep what you learn.</p>
+            <div class="prereq-banner" id="prereq-banner" hidden>
+              <strong>PREREQUISITE:</strong> Know <span>basic Python</span> (variables, loops, functions, imports) before coding the PyTorch chapters.
+            </div>
             <div class="hero-actions">
               <button class="primary-button" id="continue-button" type="button">
                 <span id="continue-label">Start learning</span>
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg>
               </button>
-              <span class="hero-caption">48 lessons · learn at your own pace</span>
+              <span class="hero-caption" id="hero-caption">48 lessons · learn at your own pace</span>
             </div>
           </div>
           <div class="hero-art" aria-hidden="true">
@@ -102,33 +115,33 @@
             <div class="orbit orbit-three"></div>
             <span class="orbit-dot dot-one"></span><span class="orbit-dot dot-two"></span>
             <div class="code-window">
-              <div class="window-top"><i></i><i></i><i></i><span>first-principles.cpp</span></div>
-              <pre><code><span class="code-muted">01</span> <b>#include</b> <span class="code-green">&lt;iostream&gt;</span>
+              <div class="window-top"><i></i><i></i><i></i><span id="hero-code-title">first-principles.cpp</span></div>
+              <pre><code id="hero-code-body"><span class="code-muted">01</span> <b>#include</b> <span class="code-green">&lt;iostream&gt;</span>
 <span class="code-muted">02</span>
 <span class="code-muted">03</span> <b>int</b> <span class="code-blue">main</span>() {
 <span class="code-muted">04</span>   std::cout &lt;&lt; <span class="code-green">"keep learning"</span>;
 <span class="code-muted">05</span> }</code></pre>
             </div>
-            <span class="art-caption">small ideas. strong foundations.</span>
+            <span class="art-caption" id="hero-art-caption">small ideas. strong foundations.</span>
           </div>
         </div>
 
         <div class="stats-row" aria-label="Course overview">
-          <div class="stat"><strong>48</strong><span>structured lessons</span></div>
-          <div class="stat"><strong>04</strong><span>learning stages</span></div>
-          <div class="stat"><strong>∞</strong><span>ways to practice</span></div>
+          <div class="stat"><strong id="stat-lessons">48</strong><span>structured lessons</span></div>
+          <div class="stat"><strong id="stat-stages">04</strong><span>learning stages</span></div>
+          <div class="stat"><strong id="stat-practice">∞</strong><span>ways to practice</span></div>
           <div class="stat stat-progress"><strong id="home-progress">0%</strong><span>your progress</span></div>
         </div>
 
         <div class="home-section">
           <div class="section-heading">
-            <div><span class="eyebrow">THE CURRICULUM</span><h2>One step at a time.</h2></div>
-            <span class="section-aside">Build confidence by building knowledge.</span>
+            <div><span class="eyebrow" id="section-eyebrow">THE CURRICULUM</span><h2 id="section-title">One step at a time.</h2></div>
+            <span class="section-aside" id="section-aside">Build confidence by building knowledge.</span>
           </div>
           <div class="phase-cards" id="phase-cards"></div>
         </div>
 
-        <div class="study-grid">
+        <div class="study-grid" id="study-grid">
           <article class="study-card study-method">
             <span class="card-icon" aria-hidden="true">01</span>
             <span class="eyebrow">A HIGH-RETENTION METHOD</span>
@@ -150,7 +163,7 @@
             <p class="small-note">Adjust the pace to your schedule. Understanding matters more than lesson count.</p>
           </article>
         </div>
-        <footer class="home-footer">A learning resource, not a race. Make the ideas yours.</footer>
+        <footer class="home-footer" id="home-footer">A learning resource, not a race. Make the ideas yours.</footer>
       </section>
 
       <section class="lesson-view" id="lesson-view" hidden>

@@ -22,7 +22,7 @@ jobs:
           .\build-app.ps1
           $stage = Join-Path $env:RUNNER_TEMP 'Fieldnotes'
           New-Item -ItemType Directory -Force -Path $stage | Out-Null
-          foreach ($item in @('Fieldnotes.exe', 'index.html', 'styles.css', 'app.js', 'COLLEGE_ROADMAP.md', 'README.md', 'SECURITY.md', 'build-app.ps1', 'desktop-app', 'lessons', 'examples')) {
+          foreach ($item in @('Fieldnotes.exe', 'index.html', 'styles.css', 'app.js', 'pytorch-lab.js', 'COLLEGE_ROADMAP.md', 'README.md', 'SECURITY.md', 'build-app.ps1', 'desktop-app', 'lessons', 'examples')) {
             Copy-Item -Path (Join-Path $env:GITHUB_WORKSPACE $item) -Destination $stage -Recurse -Force
           }
           $zip = Join-Path $env:RUNNER_TEMP 'Fieldnotes-Windows.zip'

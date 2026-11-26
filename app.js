@@ -1,20 +1,92 @@
 (() => {
   'use strict';
 
-  const phases = [
-    { file: '01-foundations.md', name: 'Programming foundations', short: 'FOUNDATIONS', range: '01 — 12', description: 'Learn to think in steps, write your first programs, and build reliable fundamentals.' },
-    { file: '02-core-cpp.md', name: 'Core C++ & data structures', short: 'CORE C++', range: '13 — 29', description: 'Understand object lifetime, modern C++, standard tools, and how to design programs.' },
-    { file: '03-algorithms-systems.md', name: 'Algorithms, systems & modern C++', short: 'SYSTEMS', range: '30 — 42', description: 'Explore algorithms, performance, operating systems, concurrency, and security.' },
-    { file: '04-engineering-capstone.md', name: 'Engineering & capstone', short: 'ENGINEERING', range: '43 — 48', description: 'Practice collaboration, delivery, architecture, and a complete project.' }
-  ];
+  const TRACK_STORAGE_KEY = 'fieldnotes-active-track-v1';
 
-  const storageKeys = {
-    completed: 'fieldnotes-cpp-completed-v1',
-    bookmarks: 'fieldnotes-cpp-bookmarks-v1',
-    lastLesson: 'fieldnotes-cpp-last-lesson-v1',
-    theme: 'fieldnotes-cpp-theme-v1'
+  const tracks = {
+    cpp: {
+      id: 'cpp',
+      expectedLessons: 48,
+      defaultTheme: 'light',
+      subtitle: ' C++ learning studio',
+      breadcrumbRoot: 'LEARNING PATH',
+      sidebarStatus: 'Built for steady progress',
+      showPrereq: false,
+      themeColors: { light: '#f5f6f3', dark: '#0e1511' },
+      hero: {
+        eyebrow: 'THE COMPLETE STUDY PATH',
+        titleHtml: 'Learn C++.<br><em>Think like a computer scientist.</em>',
+        description: 'A deliberate path from your first program to algorithms, systems, and software engineering. Learn deeply, build often, and keep what you learn.',
+        caption: '48 lessons · learn at your own pace',
+        codeTitle: 'first-principles.cpp',
+        codeHtml: `<span class="code-muted">01</span> <b>#include</b> <span class="code-green">&lt;iostream&gt;</span>\n<span class="code-muted">02</span>\n<span class="code-muted">03</span> <b>int</b> <span class="code-blue">main</span>() {\n<span class="code-muted">04</span>   std::cout &lt;&lt; <span class="code-green">"keep learning"</span>;\n<span class="code-muted">05</span> }`,
+        artCaption: 'small ideas. strong foundations.',
+        statLessons: '48',
+        statStages: '04',
+        statPractice: '∞',
+        sectionEyebrow: 'THE CURRICULUM',
+        sectionTitle: 'One step at a time.',
+        sectionAside: 'Build confidence by building knowledge.',
+        footer: 'A learning resource, not a race. Make the ideas yours.'
+      },
+      phases: [
+        { file: 'lessons/01-foundations.md', name: 'Programming foundations', short: 'FOUNDATIONS', range: '01 — 12', description: 'Learn to think in steps, write your first programs, and build reliable fundamentals.' },
+        { file: 'lessons/02-core-cpp.md', name: 'Core C++ & data structures', short: 'CORE C++', range: '13 — 29', description: 'Understand object lifetime, modern C++, standard tools, and how to design programs.' },
+        { file: 'lessons/03-algorithms-systems.md', name: 'Algorithms, systems & modern C++', short: 'SYSTEMS', range: '30 — 42', description: 'Explore algorithms, performance, operating systems, concurrency, and security.' },
+        { file: 'lessons/04-engineering-capstone.md', name: 'Engineering & capstone', short: 'ENGINEERING', range: '43 — 48', description: 'Practice collaboration, delivery, architecture, and a complete project.' }
+      ],
+      storageKeys: {
+        completed: 'fieldnotes-cpp-completed-v1',
+        bookmarks: 'fieldnotes-cpp-bookmarks-v1',
+        lastLesson: 'fieldnotes-cpp-last-lesson-v1',
+        theme: 'fieldnotes-cpp-theme-v1',
+        notePrefix: 'fieldnotes-cpp-note-'
+      },
+      lessons: []
+    },
+    pytorch: {
+      id: 'pytorch',
+      expectedLessons: 10,
+      defaultTheme: 'dark',
+      subtitle: ' neural core // pytorch',
+      breadcrumbRoot: 'NEURAL GRID',
+      sidebarStatus: 'TENSOR LINK ONLINE',
+      showPrereq: true,
+      themeColors: { light: '#f2f5fb', dark: '#06070d' },
+      hero: {
+        eyebrow: 'CYBERNETIC AI FIELD MANUAL',
+        titleHtml: 'Learn PyTorch.<br><em>Build machines that predict.</em>',
+        description: 'From raw predictions, weights, and matrix math to y = x + 1, curved neural nets, image vision CNNs, and modern LLMs — distilled into 10 sharp chapters.',
+        caption: '10 chapters · requires basic Python',
+        codeTitle: 'neural_pulse.py',
+        codeHtml: `<span class="code-muted">01</span> <b>import</b> torch, torch.nn <span class="code-blue">as</span> nn\n<span class="code-muted">02</span>\n<span class="code-muted">03</span> model = nn.<span class="code-blue">Linear</span>(1, 1)\n<span class="code-muted">04</span> y_hat = model(x) <span class="code-green"># predict y = x + 1</span>\n<span class="code-muted">05</span> loss.<span class="code-blue">backward</span>()`,
+        artCaption: 'inputs in. predictions out.',
+        statLessons: '10',
+        statStages: '04',
+        statPractice: '05',
+        sectionEyebrow: 'NEURAL SYLLABUS',
+        sectionTitle: 'Ten chapters to LLMs.',
+        sectionAside: 'Zero fluff. Interactive sandboxes offline.',
+        footer: 'Warning: neural networks only optimize what you measure.'
+      },
+      phases: [
+        { file: 'lessons/pytorch/01-ai-and-math.md', name: 'AI & Math Intuition', short: 'INTUITION', range: '01 — 03', description: 'Predictions, ML vs deep learning, CPU/CUDA/TPU/ROCm, weights, biases & matrices.' },
+        { file: 'lessons/pytorch/02-first-models.md', name: 'First PyTorch Models', short: 'FIRST NETS', range: '04 — 06', description: 'Basic Python check, tensors, learning y = x + 1 from scratch, and the 5-step training loop.' },
+        { file: 'lessons/pytorch/03-curves-and-vision.md', name: 'Curves & Computer Vision', short: 'VISION', range: '07 — 09', description: 'Bending straight lines with ReLU, images as [B, C, H, W] tensors, and CNN classifiers.' },
+        { file: 'lessons/pytorch/04-llms.md', name: 'Large Language Models', short: 'LLMS', range: '10', description: 'Tokens, embeddings, causal self-attention, and how LLMs predict the next token.' }
+      ],
+      storageKeys: {
+        completed: 'fieldnotes-pytorch-completed-v1',
+        bookmarks: 'fieldnotes-pytorch-bookmarks-v1',
+        lastLesson: 'fieldnotes-pytorch-last-lesson-v1',
+        theme: 'fieldnotes-pytorch-theme-v1',
+        notePrefix: 'fieldnotes-pytorch-note-'
+      },
+      lessons: []
+    }
   };
-  const allLessons = [];
+
+  let activeTrackId = 'cpp';
   let currentLessonId = null;
   let showingBookmarks = false;
   let toastTimer;
@@ -28,6 +100,10 @@
   const searchInput = $('#lesson-search');
   const sidebar = $('#sidebar');
   const scrim = $('#sidebar-scrim');
+
+  function activeTrack() {
+    return tracks[activeTrackId];
+  }
 
   function readList(key) {
     try {
@@ -63,12 +139,22 @@
     let html = escapeHtml(text);
     html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
     html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
     html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
       const safe = escapeHtml(safeLink(href));
       const external = /^https?:/i.test(href.trim()) ? ' target="_blank" rel="noopener noreferrer"' : '';
       return `<a href="${safe}"${external}>${label}</a>`;
     });
     return html;
+  }
+
+  function splitTableRow(line) {
+    return line
+      .trim()
+      .replace(/^\|/, '')
+      .replace(/\|$/, '')
+      .split('|')
+      .map((cell) => cell.trim());
   }
 
   function renderMarkdown(markdown) {
@@ -93,7 +179,8 @@
       }
     };
 
-    for (const line of lines) {
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
       const fence = line.match(/^```([\w+-]*)\s*$/);
       if (fence && !insideCode) {
         flushParagraph();
@@ -110,6 +197,34 @@
       }
       if (insideCode) {
         codeLines.push(line);
+        continue;
+      }
+
+      const widgetMatch = line.trim().match(/^::widget\[([\w-]+)\]$/);
+      if (widgetMatch) {
+        flushParagraph();
+        closeList();
+        output.push(`<div class="interactive-slot" data-widget="${escapeHtml(widgetMatch[1])}"></div>`);
+        continue;
+      }
+
+      if (
+        line.trim().startsWith('|') &&
+        i + 1 < lines.length &&
+        /^\s*\|?(\s*:?-{2,}:?\s*\|)+\s*:?-{2,}:?\s*\|?\s*$/.test(lines[i + 1])
+      ) {
+        flushParagraph();
+        closeList();
+        const headers = splitTableRow(line);
+        i++; // skip separator row
+        const rows = [];
+        while (i + 1 < lines.length && lines[i + 1].trim().startsWith('|')) {
+          i++;
+          rows.push(splitTableRow(lines[i]));
+        }
+        const thead = `<thead><tr>${headers.map((h) => `<th>${inlineMarkdown(h)}</th>`).join('')}</tr></thead>`;
+        const tbody = `<tbody>${rows.map((row) => `<tr>${row.map((cell) => `<td>${inlineMarkdown(cell)}</td>`).join('')}</tr>`).join('')}</tbody>`;
+        output.push(`<div class="table-wrap"><table>${thead}${tbody}</table></div>`);
         continue;
       }
 
@@ -185,25 +300,42 @@
     });
   }
 
+  async function loadTrackFiles(track) {
+    const loaded = await Promise.all(track.phases.map(async (phase, phaseIndex) => {
+      const response = await fetch(phase.file);
+      if (!response.ok) throw new Error(`Could not load ${phase.file} (${response.status}).`);
+      return parseLessons(await response.text(), phaseIndex);
+    }));
+    track.lessons = loaded.flat();
+    if (track.lessons.length !== track.expectedLessons) {
+      throw new Error(`Expected ${track.expectedLessons} lessons in ${track.id} but found ${track.lessons.length}.`);
+    }
+  }
+
   async function loadCourse() {
     try {
-      const loaded = await Promise.all(phases.map(async (phase, phaseIndex) => {
-        const response = await fetch(`lessons/${phase.file}`);
-        if (!response.ok) throw new Error(`Could not load ${phase.file} (${response.status}).`);
-        return parseLessons(await response.text(), phaseIndex);
-      }));
-      allLessons.push(...loaded.flat());
-      if (allLessons.length !== 48) throw new Error(`Expected 48 lessons but found ${allLessons.length}.`);
+      await Promise.all([loadTrackFiles(tracks.cpp), loadTrackFiles(tracks.pytorch)]);
       loadingState.hidden = true;
-      renderNavigation();
-      renderPhaseCards();
-      updateProgress();
-      const requestedId = Number(location.hash.replace('#lesson-', ''));
-      const lastId = Number(localStorage.getItem(storageKeys.lastLesson));
-      const initialLesson = allLessons.find((lesson) => lesson.id === requestedId)
-        || allLessons.find((lesson) => lesson.id === lastId);
-      if (initialLesson && location.hash.startsWith('#lesson-')) {
-        showLesson(initialLesson.id, false);
+
+      const hash = location.hash;
+      const savedTrack = localStorage.getItem(TRACK_STORAGE_KEY);
+      let initialTrack = savedTrack && tracks[savedTrack] ? savedTrack : 'cpp';
+      let initialLessonId = null;
+
+      if (hash.startsWith('#pytorch-lesson-')) {
+        initialTrack = 'pytorch';
+        initialLessonId = Number(hash.replace('#pytorch-lesson-', ''));
+      } else if (hash === '#pytorch') {
+        initialTrack = 'pytorch';
+      } else if (hash.startsWith('#lesson-')) {
+        initialTrack = 'cpp';
+        initialLessonId = Number(hash.replace('#lesson-', ''));
+      }
+
+      switchTrack(initialTrack, false);
+
+      if (initialLessonId && activeTrack().lessons.some((l) => l.id === initialLessonId)) {
+        showLesson(initialLessonId, false);
       } else {
         showHome();
       }
@@ -214,10 +346,75 @@
     }
   }
 
+  function applyTrackChrome() {
+    const track = activeTrack();
+    const hero = track.hero;
+    document.body.dataset.track = track.id;
+
+    $('#brand-subtitle').textContent = track.subtitle;
+    $('#breadcrumb-root').textContent = track.breadcrumbRoot;
+    const statusText = $('#sidebar-status-text');
+    statusText.textContent = track.sidebarStatus;
+    statusText.dataset.normalText = track.sidebarStatus;
+    statusText.classList.remove('status-corrupt');
+
+    $('#hero-eyebrow-text').textContent = hero.eyebrow;
+    $('#hero-title').innerHTML = hero.titleHtml;
+    $('#hero-description').textContent = hero.description;
+    $('#hero-caption').textContent = hero.caption;
+    $('#hero-code-title').textContent = hero.codeTitle;
+    $('#hero-code-body').innerHTML = hero.codeHtml;
+    $('#hero-art-caption').textContent = hero.artCaption;
+    $('#prereq-banner').hidden = !track.showPrereq;
+
+    $('#stat-lessons').textContent = hero.statLessons;
+    $('#stat-stages').textContent = hero.statStages;
+    $('#stat-practice').textContent = hero.statPractice;
+    $('#section-eyebrow').textContent = hero.sectionEyebrow;
+    $('#section-title').textContent = hero.sectionTitle;
+    $('#section-aside').textContent = hero.sectionAside;
+    $('#home-footer').textContent = hero.footer;
+
+    document.querySelectorAll('[data-track-btn]').forEach((btn) => {
+      const isCurrent = btn.dataset.trackBtn === track.id;
+      btn.classList.toggle('active', isCurrent);
+      btn.setAttribute('aria-pressed', String(isCurrent));
+    });
+  }
+
+  function switchTrack(trackId, navigateHome = true) {
+    if (!tracks[trackId]) return;
+    activeTrackId = trackId;
+    localStorage.setItem(TRACK_STORAGE_KEY, trackId);
+
+    showingBookmarks = false;
+    searchInput.value = '';
+    $('#review-filter').classList.remove('active');
+    $('#review-filter').setAttribute('aria-pressed', 'false');
+
+    applyTrackChrome();
+    const track = activeTrack();
+    const savedTheme = localStorage.getItem(track.storageKeys.theme) || track.defaultTheme;
+    applyTheme(savedTheme);
+
+    renderNavigation();
+    renderPhaseCards();
+    updateProgress();
+
+    if (window.PyTorchLab) window.PyTorchLab.setTrack(track.id);
+
+    if (navigateHome) {
+      history.replaceState(null, '', track.id === 'pytorch' ? '#pytorch' : location.pathname);
+      showHome();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
   function renderNavigation() {
+    const track = activeTrack();
     nav.innerHTML = '';
-    phases.forEach((phase, phaseIndex) => {
-      const lessons = allLessons.filter((lesson) => lesson.phaseIndex === phaseIndex);
+    track.phases.forEach((phase, phaseIndex) => {
+      const lessons = track.lessons.filter((lesson) => lesson.phaseIndex === phaseIndex);
       const group = document.createElement('section');
       group.className = 'phase-group';
       group.dataset.phase = phaseIndex;
@@ -254,42 +451,48 @@
   }
 
   function renderPhaseCards() {
+    const track = activeTrack();
     const container = $('#phase-cards');
     container.innerHTML = '';
-    phases.forEach((phase, phaseIndex) => {
+    track.phases.forEach((phase, phaseIndex) => {
       const card = document.createElement('button');
       card.className = 'phase-card';
       card.type = 'button';
-      const phaseLessons = allLessons.filter((lesson) => lesson.phaseIndex === phaseIndex);
-      const completed = readList(storageKeys.completed)
+      const phaseLessons = track.lessons.filter((lesson) => lesson.phaseIndex === phaseIndex);
+      const completed = readList(track.storageKeys.completed)
         .filter((id) => phaseLessons.some((lesson) => lesson.id === id)).length;
-      const percentage = Math.round(completed / phaseLessons.length * 100);
+      const percentage = phaseLessons.length ? Math.round(completed / phaseLessons.length * 100) : 0;
       card.innerHTML = `<span class="phase-card-top"><span class="phase-card-number">0${phaseIndex + 1} / STAGE</span><span class="phase-card-count">${phase.range}</span></span><h3>${escapeHtml(phase.name)}</h3><p>${escapeHtml(phase.description)}</p><span class="phase-card-progress"><span style="width:${percentage}%"></span></span>`;
-      card.addEventListener('click', () => showLesson(phaseLessons[0].id));
+      card.addEventListener('click', () => {
+        if (phaseLessons[0]) showLesson(phaseLessons[0].id);
+      });
       container.append(card);
     });
   }
 
   function updateProgress() {
-    const completed = readList(storageKeys.completed);
-    const percent = Math.round(completed.length / 48 * 100);
+    const track = activeTrack();
+    const total = track.lessons.length || track.expectedLessons;
+    const completed = readList(track.storageKeys.completed);
+    const percent = Math.round(completed.length / total * 100);
     $('#progress-percent').textContent = `${percent}%`;
     $('#home-progress').textContent = `${percent}%`;
-    $('#progress-count').textContent = `${completed.length} of 48 lessons complete`;
+    $('#progress-count').textContent = `${completed.length} of ${total} lessons complete`;
     $('#progress-fill').style.width = `${percent}%`;
-    $('#bookmark-count').textContent = String(readList(storageKeys.bookmarks).length);
+    $('#bookmark-count').textContent = String(readList(track.storageKeys.bookmarks).length);
     $('#continue-label').textContent = completed.length ? 'Continue learning' : 'Start learning';
-    const resumeId = Number(localStorage.getItem(storageKeys.lastLesson));
-    const resumeLesson = allLessons.find((lesson) => lesson.id === resumeId);
+    const resumeId = Number(localStorage.getItem(track.storageKeys.lastLesson));
+    const resumeLesson = track.lessons.find((lesson) => lesson.id === resumeId);
     if (resumeLesson) {
       $('#continue-label').textContent = completed.length ? `Continue: ${resumeLesson.title}` : 'Start learning';
     }
     updateNavigationState();
-    if (allLessons.length) renderPhaseCards();
+    if (track.lessons.length) renderPhaseCards();
   }
 
   function updateNavigationState() {
-    const completed = readList(storageKeys.completed);
+    const track = activeTrack();
+    const completed = readList(track.storageKeys.completed);
     nav.querySelectorAll('.lesson-link').forEach((button) => {
       const id = Number(button.dataset.lessonId);
       button.classList.toggle('active', id === currentLessonId);
@@ -305,55 +508,64 @@
     $('#breadcrumb-current').textContent = 'OVERVIEW';
     updateNavigationState();
     closeSidebar();
+    if (window.PyTorchLab) window.PyTorchLab.onLessonView(activeTrackId, null, null);
   }
 
   function showLesson(id, updateHash = true) {
-    const lesson = allLessons.find((item) => item.id === Number(id));
+    const track = activeTrack();
+    const total = track.lessons.length;
+    const lesson = track.lessons.find((item) => item.id === Number(id));
     if (!lesson) return;
+
     currentLessonId = lesson.id;
-    const phase = phases[lesson.phaseIndex];
+    const phase = track.phases[lesson.phaseIndex];
     homeView.hidden = true;
     lessonView.hidden = false;
     $('#breadcrumb-current').textContent = `LESSON ${String(lesson.id).padStart(2, '0')}`;
     $('#lesson-stage').textContent = `STAGE 0${lesson.phaseIndex + 1} · ${phase.short}`;
-    $('#lesson-number').textContent = `LESSON ${String(lesson.id).padStart(2, '0')} / 48`;
+    $('#lesson-number').textContent = `LESSON ${String(lesson.id).padStart(2, '0')} / ${total}`;
     $('#lesson-title').textContent = lesson.title;
     $('#lesson-deck').textContent = getDeck(lesson.body);
     const wordCount = lesson.body.trim().split(/\s+/).length;
     $('#reading-time').textContent = `${Math.max(3, Math.ceil(wordCount / 180))} MIN READ`;
-    $('#lesson-content').innerHTML = renderMarkdown(lesson.body);
+    const lessonContent = $('#lesson-content');
+    lessonContent.innerHTML = renderMarkdown(lesson.body);
 
     const completeButton = $('#complete-button');
-    const completed = readList(storageKeys.completed).includes(lesson.id);
+    const completed = readList(track.storageKeys.completed).includes(lesson.id);
     completeButton.classList.toggle('completed', completed);
     completeButton.setAttribute('aria-pressed', String(completed));
     $('#complete-label').textContent = completed ? 'Lesson completed' : 'Mark lesson complete';
 
-    const bookmarks = readList(storageKeys.bookmarks);
+    const bookmarks = readList(track.storageKeys.bookmarks);
     const isSaved = bookmarks.includes(lesson.id);
     $('#bookmark-button').classList.toggle('saved', isSaved);
     $('#bookmark-button').setAttribute('aria-pressed', String(isSaved));
     $('#bookmark-button span').textContent = isSaved ? 'Saved for review' : 'Save for review';
 
-    const index = allLessons.findIndex((item) => item.id === lesson.id);
-    const previous = allLessons[index - 1];
-    const next = allLessons[index + 1];
+    const index = track.lessons.findIndex((item) => item.id === lesson.id);
+    const previous = track.lessons[index - 1];
+    const next = track.lessons[index + 1];
     $('#previous-button').disabled = !previous;
     $('#previous-title').textContent = previous ? previous.title : 'Beginning of course';
     $('#next-button').disabled = !next;
     $('#next-title').textContent = next ? next.title : 'End of course';
 
-    $('#lesson-notes').value = localStorage.getItem(`fieldnotes-cpp-note-${lesson.id}`) || '';
+    $('#lesson-notes').value = localStorage.getItem(`${track.storageKeys.notePrefix}${lesson.id}`) || '';
     updateNotesCount();
-    localStorage.setItem(storageKeys.lastLesson, String(lesson.id));
-    if (updateHash) history.replaceState(null, '', `#lesson-${lesson.id}`);
+    localStorage.setItem(track.storageKeys.lastLesson, String(lesson.id));
+    if (updateHash) {
+      const hashPrefix = track.id === 'pytorch' ? '#pytorch-lesson-' : '#lesson-';
+      history.replaceState(null, '', `${hashPrefix}${lesson.id}`);
+    }
     updateNavigationState();
     closeSidebar();
+    if (window.PyTorchLab) window.PyTorchLab.onLessonView(track.id, lesson.id, lessonContent);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function getDeck(body) {
-    const text = body.replace(/```[\s\S]*?```/g, '').trim();
+    const text = body.replace(/```[\s\S]*?```/g, '').replace(/::widget\[[^\]]+\]/g, '').trim();
     const match = text.match(/\*\*Core idea:\*\*\s*([^\n]+)/);
     if (match) return match[1].trim();
     const firstParagraph = text.split(/\n\s*\n/).find((part) => part.trim());
@@ -366,11 +578,12 @@
 
   function toggleCompletion() {
     if (!currentLessonId) return;
-    const completed = readList(storageKeys.completed);
+    const track = activeTrack();
+    const completed = readList(track.storageKeys.completed);
     const index = completed.indexOf(currentLessonId);
     if (index >= 0) completed.splice(index, 1);
     else completed.push(currentLessonId);
-    writeList(storageKeys.completed, completed);
+    writeList(track.storageKeys.completed, completed);
     $('#complete-button').classList.toggle('completed', index < 0);
     $('#complete-button').setAttribute('aria-pressed', String(index < 0));
     $('#complete-label').textContent = index < 0 ? 'Lesson completed' : 'Mark lesson complete';
@@ -380,11 +593,12 @@
 
   function toggleBookmark() {
     if (!currentLessonId) return;
-    const bookmarks = readList(storageKeys.bookmarks);
+    const track = activeTrack();
+    const bookmarks = readList(track.storageKeys.bookmarks);
     const index = bookmarks.indexOf(currentLessonId);
     if (index >= 0) bookmarks.splice(index, 1);
     else bookmarks.push(currentLessonId);
-    writeList(storageKeys.bookmarks, bookmarks);
+    writeList(track.storageKeys.bookmarks, bookmarks);
     const saved = index < 0;
     $('#bookmark-button').classList.toggle('saved', saved);
     $('#bookmark-button').setAttribute('aria-pressed', String(saved));
@@ -396,7 +610,8 @@
 
   function applySearch() {
     const query = searchInput.value.trim().toLowerCase();
-    const bookmarks = new Set(readList(storageKeys.bookmarks));
+    const track = activeTrack();
+    const bookmarks = new Set(readList(track.storageKeys.bookmarks));
     let visibleCount = 0;
     nav.querySelectorAll('.lesson-item').forEach((item) => {
       const visible = (!query || item.dataset.search.includes(query))
@@ -444,20 +659,32 @@
   }
 
   function applyTheme(theme) {
+    const track = activeTrack();
     document.body.classList.toggle('dark', theme === 'dark');
     $('#theme-toggle').setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
-    localStorage.setItem(storageKeys.theme, theme);
+    localStorage.setItem(track.storageKeys.theme, theme);
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) metaTheme.setAttribute('content', track.themeColors[theme] || track.themeColors.light);
   }
 
+  document.querySelectorAll('[data-track-btn]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.trackBtn !== activeTrackId) {
+        switchTrack(btn.dataset.trackBtn, true);
+      }
+    });
+  });
+
   $('#continue-button').addEventListener('click', () => {
-    const lastId = Number(localStorage.getItem(storageKeys.lastLesson));
-    const firstIncomplete = allLessons.find((lesson) => !readList(storageKeys.completed).includes(lesson.id));
-    const lesson = allLessons.find((item) => item.id === lastId) || firstIncomplete || allLessons[0];
+    const track = activeTrack();
+    const lastId = Number(localStorage.getItem(track.storageKeys.lastLesson));
+    const firstIncomplete = track.lessons.find((lesson) => !readList(track.storageKeys.completed).includes(lesson.id));
+    const lesson = track.lessons.find((item) => item.id === lastId) || firstIncomplete || track.lessons[0];
     if (lesson) showLesson(lesson.id);
   });
   $('#home-link').addEventListener('click', (event) => {
     event.preventDefault();
-    history.replaceState(null, '', location.pathname);
+    history.replaceState(null, '', activeTrackId === 'pytorch' ? '#pytorch' : location.pathname);
     showHome();
   });
   $('#complete-button').addEventListener('click', toggleCompletion);
@@ -478,13 +705,14 @@
     applySearch();
   });
   $('#reset-progress').addEventListener('click', () => {
-    if (!readList(storageKeys.completed).length && !readList(storageKeys.bookmarks).length) {
+    const track = activeTrack();
+    if (!readList(track.storageKeys.completed).length && !readList(track.storageKeys.bookmarks).length) {
       showToast('There is no progress to reset.');
       return;
     }
     if (confirm('Clear completed lessons and saved-for-review items on this device? Your notes will stay.')) {
-      writeList(storageKeys.completed, []);
-      writeList(storageKeys.bookmarks, []);
+      writeList(track.storageKeys.completed, []);
+      writeList(track.storageKeys.bookmarks, []);
       showingBookmarks = false;
       $('#review-filter').classList.remove('active');
       $('#review-filter').setAttribute('aria-pressed', 'false');
@@ -494,10 +722,14 @@
       showToast('Course progress was reset.');
     }
   });
-  searchInput.addEventListener('input', applySearch);
+  searchInput.addEventListener('input', () => {
+    applySearch();
+    if (window.PyTorchLab) window.PyTorchLab.onSearch(activeTrackId, searchInput.value);
+  });
   $('#lesson-notes').addEventListener('input', () => {
     if (!currentLessonId) return;
-    localStorage.setItem(`fieldnotes-cpp-note-${currentLessonId}`, $('#lesson-notes').value);
+    const track = activeTrack();
+    localStorage.setItem(`${track.storageKeys.notePrefix}${currentLessonId}`, $('#lesson-notes').value);
     updateNotesCount();
     $('#notes-status').textContent = 'Saved just now';
   });
@@ -529,12 +761,12 @@
       closeSidebar();
       searchInput.blur();
     } else if (currentLessonId && target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
+      const total = activeTrack().lessons.length;
       if (event.key === 'ArrowLeft' && currentLessonId > 1) showLesson(currentLessonId - 1);
-      if (event.key === 'ArrowRight' && currentLessonId < 48) showLesson(currentLessonId + 1);
+      if (event.key === 'ArrowRight' && currentLessonId < total) showLesson(currentLessonId + 1);
     }
   });
 
-  const savedTheme = localStorage.getItem(storageKeys.theme);
-  if (savedTheme) applyTheme(savedTheme);
+  if (window.PyTorchLab) window.PyTorchLab.init({ showToast });
   loadCourse();
 })();

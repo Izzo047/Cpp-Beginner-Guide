@@ -343,6 +343,7 @@ internal static class FieldnotesLauncher
                 extension == ".js" ||
                 extension == ".md" ||
                 extension == ".cpp" ||
+                extension == ".py" ||
                 extension == ".svg" ||
                 extension == ".ico";
         }
@@ -356,6 +357,7 @@ internal static class FieldnotesLauncher
                 case ".js": return "application/javascript; charset=utf-8";
                 case ".md": return "text/markdown; charset=utf-8";
                 case ".cpp": return "text/plain; charset=utf-8";
+                case ".py": return "text/plain; charset=utf-8";
                 case ".svg": return "image/svg+xml";
                 case ".ico": return "image/x-icon";
                 default: return "application/octet-stream";

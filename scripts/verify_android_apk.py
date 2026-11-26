@@ -50,9 +50,12 @@ def main():
             f"{asset_root}/index.html",
             f"{asset_root}/styles.css",
             f"{asset_root}/app.js",
+            f"{asset_root}/pytorch-lab.js",
             f"{asset_root}/COLLEGE_ROADMAP.md",
             f"{asset_root}/lessons/01-foundations.md",
             f"{asset_root}/lessons/04-engineering-capstone.md",
+            f"{asset_root}/lessons/pytorch/01-ai-and-math.md",
+            f"{asset_root}/lessons/pytorch/04-llms.md",
             dex_entry,
         }
         if is_bundle:
@@ -90,8 +93,28 @@ def main():
         if sorted(lesson_ids) != list(range(1, 49)):
             raise SystemExit(f"Android package does not contain all 48 ordered lessons: {lesson_ids}")
 
+        pytorch_names = {
+            "01-ai-and-math.md",
+            "02-first-models.md",
+            "03-curves-and-vision.md",
+            "04-llms.md",
+        }
+        pytorch_ids = []
+        for name in pytorch_names:
+            asset = f"{asset_root}/lessons/pytorch/{name}"
+            if asset not in entries:
+                raise SystemExit(f"Android package is missing PyTorch lesson source: {asset}")
+            text = archive.read(asset).decode("utf-8")
+            pytorch_ids.extend(
+                int(value) for value in re.findall(r"^## Lesson (\d+) ", text, re.MULTILINE)
+            )
+        if sorted(pytorch_ids) != list(range(1, 11)):
+            raise SystemExit(
+                f"Android package does not contain all 10 ordered PyTorch lessons: {pytorch_ids}"
+            )
+
     package_type = "App Bundle" if is_bundle else "APK"
-    print(f"Verified offline Android {package_type} with all 48 lessons: {PACKAGE.name}")
+    print(f"Verified offline Android {package_type} with 48 C++ + 10 PyTorch lessons: {PACKAGE.name}")
 
 
 if __name__ == "__main__":
