@@ -431,6 +431,7 @@
   function closeSidebar() {
     document.body.classList.remove('nav-open');
     $('#menu-toggle').setAttribute('aria-expanded', 'false');
+    $('#menu-toggle').setAttribute('aria-label', 'Open course navigation');
     scrim.hidden = true;
   }
 
@@ -515,6 +516,7 @@
   $('#menu-toggle').addEventListener('click', () => {
     const open = document.body.classList.toggle('nav-open');
     $('#menu-toggle').setAttribute('aria-expanded', String(open));
+    $('#menu-toggle').setAttribute('aria-label', open ? 'Close course navigation' : 'Open course navigation');
     scrim.hidden = !open;
   });
   scrim.addEventListener('click', closeSidebar);

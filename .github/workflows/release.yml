@@ -56,11 +56,22 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $tag = $env:GITHUB_REF_NAME
+          $notesFile = Join-Path $env:GITHUB_WORKSPACE "release-notes\$tag.md"
           gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
           if ($LASTEXITCODE -eq 0) {
+            if (Test-Path -LiteralPath $notesFile) {
+              gh release edit $tag --repo $env:GITHUB_REPOSITORY --title "Fieldnotes $tag" --notes-file $notesFile
+              if ($LASTEXITCODE -ne 0) {
+                throw 'Could not update the GitHub release notes.'
+              }
+            }
             gh release upload $tag $env:RELEASE_ZIP $env:RELEASE_HASH --repo $env:GITHUB_REPOSITORY --clobber
           } else {
-            gh release create $tag $env:RELEASE_ZIP $env:RELEASE_HASH --repo $env:GITHUB_REPOSITORY --title "Fieldnotes $tag" --generate-notes
+            if (Test-Path -LiteralPath $notesFile) {
+              gh release create $tag $env:RELEASE_ZIP $env:RELEASE_HASH --repo $env:GITHUB_REPOSITORY --title "Fieldnotes $tag" --notes-file $notesFile
+            } else {
+              gh release create $tag $env:RELEASE_ZIP $env:RELEASE_HASH --repo $env:GITHUB_REPOSITORY --title "Fieldnotes $tag" --generate-notes
+            }
           }
           if ($LASTEXITCODE -ne 0) {
             throw 'Could not publish the Windows release assets.'

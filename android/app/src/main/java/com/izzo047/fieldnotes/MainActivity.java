@@ -19,6 +19,7 @@ import android.webkit.RenderProcessGoneDetail;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
@@ -40,8 +41,8 @@ public final class MainActivity extends ComponentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(Color.rgb(16, 24, 39));
-        getWindow().setNavigationBarColor(Color.rgb(16, 24, 39));
+        getWindow().setStatusBarColor(Color.rgb(13, 17, 23));
+        getWindow().setNavigationBarColor(Color.rgb(13, 17, 23));
 
         createCourseWebView();
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -61,9 +62,14 @@ public final class MainActivity extends ComponentActivity {
 
     private void createCourseWebView() {
         webView = new WebView(this);
-        webView.setBackgroundColor(Color.rgb(16, 24, 39));
-        setContentView(webView);
-        applySystemBarInsets(webView);
+        webView.setBackgroundColor(Color.rgb(13, 17, 23));
+        FrameLayout appContainer = new FrameLayout(this);
+        appContainer.setBackgroundColor(Color.rgb(13, 17, 23));
+        appContainer.addView(webView, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        setContentView(appContainer);
+        applySystemBarInsets(appContainer);
         WebView.setWebContentsDebuggingEnabled(false);
         configureWebView();
     }
@@ -179,11 +185,22 @@ public final class MainActivity extends ComponentActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             Window window = getWindow();
             window.setDecorFitsSystemWindows(false);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setNavigationBarColor(Color.TRANSPARENT);
             view.setOnApplyWindowInsetsListener((target, insets) -> {
-                Insets bars = insets.getInsets(WindowInsets.Type.systemBars());
-                target.setPadding(bars.left, bars.top, bars.right, bars.bottom);
-                return insets;
+                int safeAreaTypes = WindowInsets.Type.systemBars()
+                        | WindowInsets.Type.displayCutout();
+                Insets safeArea = insets.getInsets(safeAreaTypes);
+                target.setPadding(
+                        safeArea.left,
+                        safeArea.top,
+                        safeArea.right,
+                        safeArea.bottom);
+                return new WindowInsets.Builder(insets)
+                        .setInsets(safeAreaTypes, Insets.NONE)
+                        .build();
             });
+            view.requestApplyInsets();
         }
     }
 
