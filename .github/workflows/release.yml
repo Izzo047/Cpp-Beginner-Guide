@@ -133,6 +133,21 @@ jobs:
           python scripts/verify_android_apk.py android/app/build/outputs/bundle/release/app-release.aab
           sha256sum android/app/build/outputs/apk/release/app-release.apk > android/app/build/outputs/apk/release/app-release.apk.sha256
           sha256sum android/app/build/outputs/bundle/release/app-release.aab > android/app/build/outputs/bundle/release/app-release.aab.sha256
+          android_zip_dir="$RUNNER_TEMP/Fieldnotes-Android"
+          mkdir -p "$android_zip_dir"
+          cp android/app/build/outputs/apk/release/app-release.apk "$android_zip_dir/"
+          apk_hash="$(sha256sum "$android_zip_dir/app-release.apk" | cut -d ' ' -f 1)"
+          printf '%s  %s\n' "$apk_hash" "app-release.apk" > "$android_zip_dir/app-release.apk.sha256"
+          cat > "$android_zip_dir/INSTALL.txt" <<'EOF'
+          Fieldnotes Android release
+
+          Install app-release.apk on an Android device. The APK is production-signed.
+          Keep app-release.apk.sha256 beside the APK to verify its SHA-256 checksum.
+          EOF
+          (cd "$android_zip_dir" && zip -q "$RUNNER_TEMP/Fieldnotes-Android.zip" app-release.apk app-release.apk.sha256 INSTALL.txt)
+          sha256sum "$RUNNER_TEMP/Fieldnotes-Android.zip" > "$RUNNER_TEMP/Fieldnotes-Android.zip.sha256"
+          echo "ANDROID_ZIP=$RUNNER_TEMP/Fieldnotes-Android.zip" >> "$GITHUB_ENV"
+          echo "ANDROID_ZIP_HASH=$RUNNER_TEMP/Fieldnotes-Android.zip.sha256" >> "$GITHUB_ENV"
       - name: Upload APK to the GitHub release
         if: steps.android_signing.outputs.enabled == 'true'
         env:
@@ -143,5 +158,7 @@ jobs:
             android/app/build/outputs/apk/release/app-release.apk.sha256 \
             android/app/build/outputs/bundle/release/app-release.aab \
             android/app/build/outputs/bundle/release/app-release.aab.sha256 \
+            "$ANDROID_ZIP" \
+            "$ANDROID_ZIP_HASH" \
             --repo "$GITHUB_REPOSITORY" \
             --clobber
