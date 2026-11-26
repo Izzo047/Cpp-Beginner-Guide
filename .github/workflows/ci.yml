@@ -1,0 +1,64 @@
+name: Validate and build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  course:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate lessons and links
+        run: python scripts/validate_course.py
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: android-actions/setup-android@v3
+        with:
+          accept-android-sdk-licenses: true
+          log-accepted-android-sdk-licenses: true
+      - name: Install Android SDK packages
+        run: |
+          sdkmanager --install "platforms;android-37.0" "build-tools;37.0.0"
+      - name: Build and lint Android app
+        run: |
+          chmod +x android/gradlew
+          cd android
+          ./gradlew --no-daemon :app:assembleDebug :app:lintDebug
+          cd ..
+          python scripts/verify_android_apk.py android/app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fieldnotes-android-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Windows launcher
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+          $env:FIELDNOTES_SKIP_SHORTCUT = '1'
+          .\build-app.ps1
+          if (-not (Test-Path .\Fieldnotes.exe)) {
+            throw 'Windows launcher was not produced.'
+          }

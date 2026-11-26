@@ -1,0 +1,85 @@
+plugins {
+    id 'com.android.application'
+}
+
+def courseRoot = rootProject.projectDir.parentFile
+def generatedCourseAssets = layout.buildDirectory.dir('generated/courseAssets')
+def releaseStorePath = System.getenv('ANDROID_KEYSTORE_PATH')
+def releaseStorePassword = System.getenv('ANDROID_KEYSTORE_PASSWORD')
+def releaseKeyAlias = System.getenv('ANDROID_KEY_ALIAS')
+def releaseKeyPassword = System.getenv('ANDROID_KEY_PASSWORD')
+def hasReleaseSigning = [releaseStorePath, releaseStorePassword, releaseKeyAlias, releaseKeyPassword]
+        .every { value -> value != null && !value.isBlank() }
+def appVersionCode = (System.getenv('ANDROID_VERSION_CODE') ?: '1').toInteger()
+def appVersionName = System.getenv('ANDROID_VERSION_NAME') ?: '1.0.0'
+
+tasks.register('syncCourseAssets', Sync) {
+    from(courseRoot) {
+        include 'index.html'
+        include 'styles.css'
+        include 'app.js'
+        include 'COLLEGE_ROADMAP.md'
+        include 'lessons/**/*.md'
+        include 'examples/**/*.cpp'
+    }
+    into(generatedCourseAssets)
+}
+
+android {
+    namespace 'com.izzo047.fieldnotes'
+    compileSdk 37
+
+    defaultConfig {
+        applicationId 'com.izzo047.fieldnotes'
+        minSdk 24
+        targetSdk 37
+        versionCode appVersionCode
+        versionName appVersionName
+    }
+
+    sourceSets {
+        main {
+            assets.srcDir(generatedCourseAssets.get().asFile)
+        }
+    }
+
+    signingConfigs {
+        if (hasReleaseSigning) {
+            create('release') {
+                storeFile file(releaseStorePath)
+                storePassword releaseStorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.getByName('release')
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+tasks.named('preBuild').configure {
+    dependsOn tasks.named('syncCourseAssets')
+}
+
+dependencies {
+    implementation 'androidx.activity:activity:1.13.0'
+    implementation 'androidx.webkit:webkit:1.18.0'
+}

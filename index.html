@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6f3">
+  <meta name="description" content="A focused, interactive learning path for C++ and core computer science.">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; media-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'">
+  <title>Fieldnotes — C++ Learning Studio</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to learning content</a>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Course navigation">
+      <a class="brand" href="#" id="home-link" aria-label="Fieldnotes home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span><strong>fieldnotes</strong><small> C++ learning studio</small></span>
+      </a>
+
+      <div class="sidebar-label">YOUR COURSE</div>
+      <label class="search-box" for="lesson-search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.5 4.5"></path></svg>
+        <input id="lesson-search" type="search" placeholder="Find a lesson..." autocomplete="off">
+        <kbd>/</kbd>
+      </label>
+
+      <section class="progress-card" aria-label="Course progress">
+        <div class="progress-heading"><span>Your progress</span><strong id="progress-percent">0%</strong></div>
+        <div class="progress-track"><span id="progress-fill"></span></div>
+        <p id="progress-count">0 of 48 lessons complete</p>
+        <p class="storage-note">Saved in this browser on this device.</p>
+        <button class="text-button" id="reset-progress" type="button">Reset progress</button>
+      </section>
+
+      <button class="review-filter" id="review-filter" type="button" aria-pressed="false">
+        <span><span class="review-star" aria-hidden="true">☆</span> Saved for review</span>
+        <span class="review-filter-count" id="bookmark-count">0</span>
+      </button>
+
+      <nav class="course-nav" id="phase-nav" aria-label="Lessons">
+        <p class="loading-note">Preparing your course…</p>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Built for steady progress</span>
+      </div>
+    </aside>
+
+    <div class="sidebar-scrim" id="sidebar-scrim" hidden></div>
+
+    <main class="main-shell" id="main-content">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="menu-toggle" type="button" aria-label="Open course navigation" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+        </button>
+        <div class="breadcrumbs"><span>LEARNING PATH</span><span class="crumb-divider">/</span><span id="breadcrumb-current">OVERVIEW</span></div>
+        <div class="topbar-actions">
+          <button class="icon-button" id="print-button" type="button" aria-label="Print current lesson" title="Print lesson">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7z"></path><path d="M17 11h.01"></path></svg>
+          </button>
+          <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch to dark theme" title="Toggle theme">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <section class="loading-state" id="loading-state" aria-live="polite">
+        <div class="loading-mark"></div>
+        <p>Loading your learning path…</p>
+      </section>
+
+      <section class="error-state" id="error-state" hidden>
+        <span class="eyebrow">ONE QUICK SETUP</span>
+        <h1>Open this course through a local web server</h1>
+        <p>Browsers restrict loading lesson files directly from disk. From this folder, run:</p>
+        <pre><code>python -m http.server 8000</code></pre>
+        <p>Then open <code>http://localhost:8000</code>. Keep the terminal open while you study.</p>
+        <p class="error-detail" id="error-detail"></p>
+      </section>
+
+      <section class="home-view" id="home-view" hidden>
+        <div class="home-hero">
+          <div class="hero-copy">
+            <span class="eyebrow"><span class="eyebrow-line"></span>THE COMPLETE STUDY PATH</span>
+            <h1>Learn C++.<br><em>Think like a computer scientist.</em></h1>
+            <p class="hero-description">A deliberate path from your first program to algorithms, systems, and software engineering. Learn deeply, build often, and keep what you learn.</p>
+            <div class="hero-actions">
+              <button class="primary-button" id="continue-button" type="button">
+                <span id="continue-label">Start learning</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg>
+              </button>
+              <span class="hero-caption">48 lessons · learn at your own pace</span>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="orbit orbit-one"></div>
+            <div class="orbit orbit-two"></div>
+            <div class="orbit orbit-three"></div>
+            <span class="orbit-dot dot-one"></span><span class="orbit-dot dot-two"></span>
+            <div class="code-window">
+              <div class="window-top"><i></i><i></i><i></i><span>first-principles.cpp</span></div>
+              <pre><code><span class="code-muted">01</span> <b>#include</b> <span class="code-green">&lt;iostream&gt;</span>
+<span class="code-muted">02</span>
+<span class="code-muted">03</span> <b>int</b> <span class="code-blue">main</span>() {
+<span class="code-muted">04</span>   std::cout &lt;&lt; <span class="code-green">"keep learning"</span>;
+<span class="code-muted">05</span> }</code></pre>
+            </div>
+            <span class="art-caption">small ideas. strong foundations.</span>
+          </div>
+        </div>
+
+        <div class="stats-row" aria-label="Course overview">
+          <div class="stat"><strong>48</strong><span>structured lessons</span></div>
+          <div class="stat"><strong>04</strong><span>learning stages</span></div>
+          <div class="stat"><strong>∞</strong><span>ways to practice</span></div>
+          <div class="stat stat-progress"><strong id="home-progress">0%</strong><span>your progress</span></div>
+        </div>
+
+        <div class="home-section">
+          <div class="section-heading">
+            <div><span class="eyebrow">THE CURRICULUM</span><h2>One step at a time.</h2></div>
+            <span class="section-aside">Build confidence by building knowledge.</span>
+          </div>
+          <div class="phase-cards" id="phase-cards"></div>
+        </div>
+
+        <div class="study-grid">
+          <article class="study-card study-method">
+            <span class="card-icon" aria-hidden="true">01</span>
+            <span class="eyebrow">A HIGH-RETENTION METHOD</span>
+            <h3>Study to understand,<br>not to get through it.</h3>
+            <ol>
+              <li><b>Retrieve.</b> Before rereading, write what you remember.</li>
+              <li><b>Predict.</b> Guess what the code will do, then run it.</li>
+              <li><b>Explain.</b> Teach the idea aloud in plain language.</li>
+              <li><b>Return.</b> Revisit it tomorrow, next week, and next month.</li>
+            </ol>
+          </article>
+          <article class="study-card study-rhythm">
+            <span class="card-icon card-icon-green" aria-hidden="true">02</span>
+            <span class="eyebrow">A WEEKLY RHYTHM</span>
+            <h3>Consistency beats<br>cramming.</h3>
+            <div class="rhythm-row"><span>Learn</span><span>2 focused sessions</span></div>
+            <div class="rhythm-row"><span>Practice</span><span>1 small program</span></div>
+            <div class="rhythm-row"><span>Review</span><span>1 recall session</span></div>
+            <p class="small-note">Adjust the pace to your schedule. Understanding matters more than lesson count.</p>
+          </article>
+        </div>
+        <footer class="home-footer">A learning resource, not a race. Make the ideas yours.</footer>
+      </section>
+
+      <section class="lesson-view" id="lesson-view" hidden>
+        <div class="lesson-heading">
+          <div class="lesson-meta">
+            <span class="stage-pill" id="lesson-stage"></span>
+            <span class="meta-separator">·</span>
+            <span id="lesson-number"></span>
+            <span class="meta-separator">·</span>
+            <span id="reading-time"></span>
+          </div>
+          <h1 id="lesson-title"></h1>
+          <p class="lesson-deck" id="lesson-deck"></p>
+          <div class="lesson-controls">
+            <button class="complete-button" id="complete-button" type="button">
+              <span class="complete-check" aria-hidden="true">✓</span>
+              <span id="complete-label">Mark lesson complete</span>
+            </button>
+            <button class="bookmark-button" id="bookmark-button" type="button" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21l-6-4-6 4z"></path></svg>
+              <span>Save for review</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="lesson-layout">
+          <article class="lesson-content" id="lesson-content"></article>
+          <aside class="lesson-aside">
+            <div class="aside-card">
+              <span class="eyebrow">YOUR NOTES</span>
+              <label class="visually-hidden" for="lesson-notes">Personal notes for this lesson</label>
+              <textarea id="lesson-notes" placeholder="Capture a question, insight, or example to revisit…"></textarea>
+              <div class="notes-footer"><span id="notes-status">Saved on this device</span><span id="notes-count">0</span></div>
+            </div>
+            <div class="aside-tip">
+              <span class="tip-mark">✳</span>
+              <p><strong>Make it stick</strong><br>Close the notes and explain the main idea from memory before moving on.</p>
+            </div>
+          </aside>
+        </div>
+
+        <nav class="lesson-pagination" aria-label="Lesson navigation">
+          <button class="page-button previous-button" id="previous-button" type="button">
+            <span class="page-direction">← PREVIOUS</span><strong id="previous-title">Previous lesson</strong>
+          </button>
+          <button class="page-button next-button" id="next-button" type="button">
+            <span class="page-direction">NEXT LESSON →</span><strong id="next-title">Next lesson</strong>
+          </button>
+        </nav>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

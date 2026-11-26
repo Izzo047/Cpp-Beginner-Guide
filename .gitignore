@@ -1,0 +1,22 @@
+# Android build output and local signing material
+android/.gradle/
+android/build/
+android/local.properties
+android/app/build/
+android/app/release-key.jks
+*.jks
+*.keystore
+
+# Local release packages
+dist/
+
+# IDE and operating-system files
+.idea/
+.vscode/
+*.iml
+*.user
+*.suo
+*.DS_Store
+Thumbs.db
+__pycache__/
+*.py[cod]
