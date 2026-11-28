@@ -18,9 +18,11 @@ tasks.register('syncCourseAssets', Sync) {
         include 'index.html'
         include 'styles.css'
         include 'app.js'
+        include 'pytorch-lab.js'
         include 'COLLEGE_ROADMAP.md'
         include 'lessons/**/*.md'
         include 'examples/**/*.cpp'
+        include 'examples/**/*.py'
     }
     into(generatedCourseAssets)
 }

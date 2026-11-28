@@ -20,17 +20,19 @@ if ($LASTEXITCODE -ne 0) {
     throw "Launcher compilation failed with exit code $LASTEXITCODE."
 }
 
-$desktop = [Environment]::GetFolderPath('Desktop')
-$shortcutPath = Join-Path $desktop 'Fieldnotes - C++ Learning Studio.lnk'
 if ($env:FIELDNOTES_SKIP_SHORTCUT -ne '1') {
-    $shell = New-Object -ComObject WScript.Shell
-    $shortcut = $shell.CreateShortcut($shortcutPath)
-    $shortcut.TargetPath = $executable
-    $shortcut.WorkingDirectory = $root
-    $shortcut.Description = 'Open the folder-backed Fieldnotes C++ learning app'
-    $shortcut.IconLocation = "$executable,0"
-    $shortcut.Save()
-    Write-Output "Desktop shortcut: $shortcutPath"
+    $desktop = [Environment]::GetFolderPath('Desktop')
+    if (-not [string]::IsNullOrWhiteSpace($desktop)) {
+        $shortcutPath = Join-Path $desktop 'Fieldnotes - C++ Learning Studio.lnk'
+        $shell = New-Object -ComObject WScript.Shell
+        $shortcut = $shell.CreateShortcut($shortcutPath)
+        $shortcut.TargetPath = $executable
+        $shortcut.WorkingDirectory = $root
+        $shortcut.Description = 'Open the folder-backed Fieldnotes C++ learning app'
+        $shortcut.IconLocation = "$executable,0"
+        $shortcut.Save()
+        Write-Output "Desktop shortcut: $shortcutPath"
+    }
 }
 
 Write-Output "Built: $executable"

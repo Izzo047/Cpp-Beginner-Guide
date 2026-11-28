@@ -14,6 +14,10 @@ For a complete college-level sequence, source-by-source coverage review, and top
 
 Open the course as a searchable, progress-tracking webpage: from this folder, run `python -m http.server 8000`, then visit `http://localhost:8000` in your browser. Keep the terminal open while using the site. The page loads the lesson Markdown files locally, so do not open `index.html` directly from disk. No packages or internet connection are required. Progress, bookmarks, and study notes are saved only in the browser on this device.
 
+### PyTorch AI Basics track
+
+Use the **C++ / PyTorch AI** track switcher in the sidebar or top bar to open the 10-chapter **PyTorch AI** track (`lessons/pytorch/`). It covers predictions vs. traditional ML (`scikit-learn`), hardware (`CPU`, `CUDA`, `TPU`, `ROCm`), weights, biases, matrix multiplication, `y = x + 1`, curves with `ReLU`, image tensors & CNNs, and LLMs — plus offline interactive sandboxes and runnable scripts in `examples/pytorch/`. Make sure you know basic Python before coding the PyTorch chapters.
+
 ## Android app
 
 The Android app packages the course for offline reading. From this folder, open a terminal and run:
